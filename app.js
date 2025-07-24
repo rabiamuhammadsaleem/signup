@@ -1,10 +1,9 @@
+// Supabase Setup
 const supabaseUrl = "https://dutjglitxfaotauardhj.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1dGpnbGl0eGZhb3RhdWFyZGhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1ODU0MDAsImV4cCI6MjA2ODE2MTQwMH0.R0CIrMCT2JmCib70r0JB4gR3zzTN_n8gxSUwcbPY0EM";
 
 const { createClient } = supabase;
 const client = createClient(supabaseUrl, supabaseKey);
-
-
 
 
 // Loader functions
@@ -22,16 +21,7 @@ function hideLoader() {
   }
 }
 
-  window.onload = function () {
-  const allInputs = document.querySelectorAll("input");
-  allInputs.forEach(input => input.value = "");
-};
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  displayUserProfile();
-});
-
+// UserProfile functions
 async function displayUserProfile() {
   try {
     showLoader();
@@ -61,24 +51,39 @@ async function displayUserProfile() {
   }
 }
 
-// Password visibility toggle
-const togglePassword = document.getElementById('togglePassword');
-const passwordInput = document.getElementById('login-password');
-const eyeIcon = document.getElementById('loginEyeIcon');
+// Password visibility toggle for login page
+const togglePassword1 = document.getElementById('toggleLoginPassword'); // updated this line
+const passwordInput1 = document.getElementById('login-password');
+const eyeIcon1 = document.getElementById('loginEyeIcon');
 
-if (togglePassword && passwordInput && eyeIcon) {
-  togglePassword.addEventListener('click', () => {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    eyeIcon.classList.toggle('fa-eye');
-    eyeIcon.classList.toggle('fa-eye-slash');
+if (togglePassword1 && passwordInput1 && eyeIcon1) {
+  togglePassword1.addEventListener('click', () => {
+    const type = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput1.setAttribute('type', type);
+    eyeIcon1.classList.toggle('fa-eye');
+    eyeIcon1.classList.toggle('fa-eye-slash');
+  });
+}
+
+// Password visibility toggle for signup page
+const togglePassword2 = document.getElementById('togglesignupPassword'); // updated this line
+const passwordInput2 = document.getElementById('signup-password');
+const eyeIcon2 = document.getElementById('signupEyeIcon');
+
+if (togglePassword2 && passwordInput2 && eyeIcon2) {
+  togglePassword2.addEventListener('click', () => {
+    const type = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput2.setAttribute('type', type);
+    eyeIcon2.classList.toggle('fa-eye');
+    eyeIcon2.classList.toggle('fa-eye-slash');
   });
 }
 
 // Signup functionality
 const signupBtn = document.getElementById('signup-btn');
-    signupBtn && signupBtn.addEventListener('click', async (e) => {
-  e.preventDefault(); 
+const signupForm = document.getElementById('signupForm');
+signupBtn && signupBtn.addEventListener('click', async (e) => {
+  e.preventDefault();
   const username = document.getElementById('signup-username');
   const email = document.getElementById('signup-email');
   const password = document.getElementById('signup-password');
@@ -107,52 +112,16 @@ const signupBtn = document.getElementById('signup-btn');
     }
   } catch (error) {
     console.error('Signup error:', error);
-    alert('Signup failed: ' + error.message);
+    if (error.message.includes('invalid format')) {
+      alert('Please enter a valid email address');
+    } else {
+      alert('Signup failed: ' + error.message);
+    }
   } finally {
     hideLoader();
   }
-     window.location.href = 'post.html';
 });
-// Swal.fire({
-//     icon: 'success',
-//     title: 'Welcome!',
-//   }).then(() => {
-//     window.location.href = 'post.html';
-//   });
 
-
-
-
-// const signupBtn = document.getElementById('signup-btn');
-// signupBtn && signupBtn.addEventListener('click', async () => {
-//   const email = document.getElementById('signup-email');
-//   const password = document.getElementById('signup-password');
-
-//   if (!email.value || !password.value) {
-//     alert('Please fill all fields');
-//     return;
-//   }
-
-//   try {
-//     showLoader();
-//     const { data, error } = await client.auth.signUp({
-//       email: email.value,
-//       password: password.value,
-//     });
-    
-//     if (error) throw error;
-//     if (data) window.location.href = 'post.html';
-//   } catch (error) {
-//     console.error('Signup error:', error);
-//     if (error.message.includes('invalid format')) {
-//       alert('Please enter a valid email address');
-//     } else {
-//       alert('Signup failed: ' + error.message);
-//     }
-//   } finally {
-//     hideLoader();
-//   }
-// });
 
 // Login functionality
 const loginBtn = document.getElementById('login-btn');
@@ -171,12 +140,13 @@ loginBtn && loginBtn.addEventListener('click', async () => {
       email: email.value,
       password: password.value,
     });
-    
+
     if (error) throw error;
     if (data) window.location.href = 'post.html';
   } catch (error) {
     console.error('Login error:', error);
     alert('Login failed: ' + error.message);
+    window.location.href = 'index.html';
   } finally {
     hideLoader();
   }
@@ -211,6 +181,7 @@ loginWithGithub && loginWithGithub.addEventListener('click', async () => {
       provider: 'github',
       options: {
         redirectTo: window.location.origin + '/post.html',
+        queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
     if (error) throw error;
@@ -236,19 +207,19 @@ logoutBtn && logoutBtn.addEventListener('click', async () => {
   }
 });
 
-// // Check for returning OAuth redirect
-// document.addEventListener('DOMContentLoaded', async () => {
-//   if (window.location.hash.includes('access_token')) {
-//     const {
-//       data: { session },
-//     } = await client.auth.getSession();
-//     if (session) window.location.href = 'post.html';
-//   }
-  
-//   if (!window.location.pathname.includes('index.html') && !window.location.pathname.includes('login.html')) {
-//     displayUserProfile();
-//   }
-// });
+// Check for returning OAuth redirect
+document.addEventListener('DOMContentLoaded', async () => {
+  if (window.location.hash.includes('access_token')) {
+    const {
+      data: { session },
+    } = await client.auth.getSession();
+    if (session) window.location.href = 'post.html';
+  }
+
+  if (!window.location.pathname.includes('index.html') && !window.location.pathname.includes('login.html')) {
+    displayUserProfile();
+  }
+});
 
 
 // Post functionality
@@ -282,7 +253,7 @@ submitPost && submitPost.addEventListener('click', async () => {
     ]);
 
     if (error) throw error;
-    
+
     alert('Post created successfully!');
     document.getElementById('post-title').value = '';
     document.getElementById('postdescrib').value = '';
@@ -302,7 +273,7 @@ async function readAllPosts() {
     const { data, error } = await client.from('posts').select();
 
     if (error) throw error;
-    
+
     if (data && document.getElementById('container')) {
       const box = document.getElementById('container');
       box.innerHTML = data
@@ -320,7 +291,7 @@ async function readAllPosts() {
         })
         .join('');
 
-      // Add event listener for read more buttons
+      // Add read-more event listener
       document.querySelectorAll('.read-more-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const fullText = e.target.getAttribute('data-full');
@@ -338,164 +309,162 @@ async function readAllPosts() {
 
 //read my posts
 const readMyPosts = async () => {
-	const {
-		data: { user },
-	} = await client.auth.getUser();
+  const {
+    data: { user },
+  } = await client.auth.getUser();
 
-	const { data, error } = await client.from('posts').select().eq('user_id', user.id);
+  const { data, error } = await client.from('posts').select().eq('user_id', user.id);
 
-	if (data) {
-		const box = document.getElementById('container');
+  if (data) {
+    const box = document.getElementById('container');
 
-		box.innerHTML = data
-			.map(({ id, title, description }) => {
-				const isLong = description.length > 150;
-				const shortDesc = isLong ? description.slice(0, 150) + "..." : description;
+    box.innerHTML = data
+      .map(({ id, title, description }) => {
+        const isLong = description.length > 150;
+        const shortDesc = isLong ? description.slice(0, 150) + "..." : description;
 
-				return `
+        return `
 					<div id="${id}" class="blog-card text-center">
 						<h4>${title}</h4>
 						<p>${shortDesc}</p>
 						${isLong ? `<button class="read-more-btn" data-full="${description.replace(/"/g, '&quot;')}">Read More</button>` : ""}
 						<div class="d-flex justify-content-center gap-3 mt-3">
-  <button onclick="updatePost('${id}','${title}','${description}')" class="btn btn-edit">
-    📝 Edit
-  </button>
-  <button onclick="deletePost('${id}')" class="btn btn-delete">
-    ✖️ Delete
-  </button>
-</div>
+            <button onclick="updatePost('${id}','${title}','${description}')" class="btn btn-edit">
+            <i class="fas fa-edit me-1"></i> Edit
+            </button>
+            <button onclick="deletePost('${id}')" class="btn btn-delete">
+            <i class="fas fa-trash-alt me-1"></i> Delete
+            </button>
+           </div>
+           </div>`;
+      })
+      .join('');
 
-					</div>`;
-			})
-			.join('');
-
-		// Add read-more event listener
-		document.addEventListener('click', (e) => {
-			if (e.target.classList.contains('read-more-btn')) {
-				const fullText = e.target.getAttribute('data-full');
-				Swal.fire({
-					title: 'Full Description',
-					text: fullText,
-					icon: 'info',
-					confirmButtonColor: '#3085d6'
-				});
-			}
-		});
-	} else {
-		console.log(error);
-	}
+    // Add read-more event listener
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('read-more-btn')) {
+        const fullText = e.target.getAttribute('data-full');
+        Swal.fire({
+          title: 'Full Description',
+          text: fullText,
+          icon: 'info',
+          confirmButtonColor: '#3085d6'
+        });
+      }
+    });
+  } else {
+    console.log(error);
+  }
 };
 if (window.location.pathname == '/my-blogs.html') {
-	const current = document.getElementById('active');
+  const current = document.getElementById('active');
 
-	try {
-		readMyPosts();
-	} catch (error) {
-		console.log(error);
-	}
+  try {
+    readMyPosts();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 //delete a post
 
 async function deletePost(postId) {
-	const swalWithBootstrapButtons = Swal.mixin({
-		customClass: {
-			confirmButton: 'btn btn-success',
-			cancelButton: 'btn btn-danger',
-		},
-		buttonsStyling: false,
-	});
-	swalWithBootstrapButtons
-		.fire({
-			title: 'Are you sure?',
-			text: "You won't be able to revert this!",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonText: 'Yes, delete it!',
-			cancelButtonText: 'No, cancel!',
-			reverseButtons: true,
-		})
-		.then(async (result) => {
-			if (result.isConfirmed) {
-				try {
-					showLoader();
-					const response = await client.from('posts').delete().eq('id', postId);
-					if (response) {
-						hideLoader();
-						alert('post has been deleted');
-						console.log(response);
-						readMyPosts();
-					} else {
-						console.log(error);
-					}
-				} catch (error) {
-					console.log(error);
-				} finally {
-					hideLoader();
-				}
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger',
+    },
+    buttonsStyling: false,
+  });
+  swalWithBootstrapButtons
+    .fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true,
+    })
+    .then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          showLoader();
+          const response = await client.from('posts').delete().eq('id', postId);
+          if (response) {
+            hideLoader();
+            alert('post has been deleted');
+            console.log(response);
+            readMyPosts();
+          } else {
+            console.log(error);
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          hideLoader();
+        }
 
-				swalWithBootstrapButtons.fire({
-					title: 'Deleted!',
-					text: 'Your file has been deleted.',
-					icon: 'success',
-				});
-			} else if (
-				/* Read more about handling dismissals below */
-				result.dismiss === Swal.DismissReason.cancel
-			) {
-				swalWithBootstrapButtons.fire({
-					title: 'Cancelled',
-					text: 'Your imaginary file is safe :)',
-					icon: 'error',
-				});
-			}
-		});
+        swalWithBootstrapButtons.fire({
+          title: 'Deleted!',
+          text: 'Your file has been deleted.',
+          icon: 'success',
+        });
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: 'Cancelled',
+          text: 'Your imaginary file is safe :)',
+          icon: 'error',
+        });
+      }
+    });
 }
 
 //update post
 
 async function updatePost(postId, postTitle, postDescription) {
-	const { value: formValues } = await Swal.fire({
-		title: 'Update post',
-		html: `
+  const { value: formValues } = await Swal.fire({
+    title: 'Update post',
+    html: `
     <label > post title
 	<input id="swal-input1" class="swal1-input"  value = '${postTitle}' ></label>
     <label > post description
 	<input id="swal-input2" class="swal2-input" style="margin: 0 !important;"   value = '${postDescription}' ></label>
   `,
-		focusConfirm: false,
-		preConfirm: () => {
-			return [document.getElementById('swal-input1').value, document.getElementById('swal-input2').value];
-		},
-	});
-	try {
-		if (formValues) {
-			showLoader();
-			const [updatedTitle, updatedDescription] = formValues;
-			const { error } = await client
-				.from('posts')
-				.update({ title: updatedTitle, description: updatedDescription })
-				.eq('id', postId);
+    focusConfirm: false,
+    preConfirm: () => {
+      return [document.getElementById('swal-input1').value, document.getElementById('swal-input2').value];
+    },
+  });
+  try {
+    if (formValues) {
+      showLoader();
+      const [updatedTitle, updatedDescription] = formValues;
+      const { error } = await client
+        .from('posts')
+        .update({ title: updatedTitle, description: updatedDescription })
+        .eq('id', postId);
 
-			if (error) {
-				console.log(error);
-			} else {
-				hideLoader();
+      if (error) {
+        console.log(error);
+      } else {
+        hideLoader();
 
-				Swal.fire({
-					icon: 'success',
-					title: 'your post has been updated',
-					confirmButtonColor: '#125b9a',
-				});
-				readMyPosts();
-			}
-		}
-	} catch (error) {
-		console.log(error);
-	} finally {
-		hideLoader();
-	}
+        Swal.fire({
+          icon: 'success',
+          title: 'your post has been updated',
+          confirmButtonColor: '#125b9a',
+        });
+        readMyPosts();
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    hideLoader();
+  }
 }
 
 // Initialize appropriate page
