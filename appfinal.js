@@ -833,15 +833,18 @@ async function readAllPosts() {
       box.innerHTML = data
         .map(({ id, title, description }) => {
           const isLong = description.length > 150;
-          const shortDesc = isLong ? description.slice(0, 150) + "..." : description;
+          const shortDesc = isLong ? description.slice(0, 30) + "..." : description;
+
+          const isTitleLong = title.length > 10;
+          const shortTitle = isTitleLong ? title.slice(0, 10) + "..." : title;
 
           return `
-            <div id="${id}" class="blog-card">
-              <h4>${title}</h4>
-              <p>${shortDesc}</p>
-              ${isLong ? `<button class="read-more-btn" data-full="${description.replace(/"/g, '&quot;')}">Read More</button>` : ""}
-            </div>
-          `;
+    <div id="${id}" class="blog-card text-center">
+      <h4 class="text-center">${shortTitle}</h4>
+      <p>${shortDesc}</p>
+      ${isLong ? `<button class="read-more-btn" data-full="${description.replace(/"/g, '&quot;')}">Read More</button>` : ""}
+    </div>
+  `;
         })
         .join('');
 
@@ -887,22 +890,39 @@ const readMyPosts = async () => {
         const isLong = description.length > 150;
         const shortDesc = isLong ? description.slice(0, 150) + "..." : description;
 
+        const isTitleLong = title.length > 10;
+        const shortTitle = isTitleLong ? title.slice(0, 10) + "..." : title;
+
         return `
-          <div id="${id}" class="blog-card text-center">
-            <h4>${title}</h4>
-            <p>${shortDesc}</p>
-            ${isLong ? `<button class="read-more-btn" data-full="${description.replace(/"/g, '&quot;')}">Read More</button>` : ""}
-            <div class="d-flex justify-content-center gap-3 mt-3">
-              <button onclick="updatePost('${id}','${title}','${description}')" class="btn btn-edit">
-                <i class="fas fa-edit me-1"></i> Edit
-              </button>
-              <button onclick="deletePost('${id}')" class="btn btn-delete">
-                <i class="fas fa-trash-alt me-1"></i> Delete
-              </button>
-            </div>
-          </div>`;
+    <div id="${id}" class="blog-card text-center">
+      <h4>${shortTitle}</h4>
+      <p>${shortDesc}</p>
+      ${isLong ? `<button class="read-more-btn" data-full="${description.replace(/"/g, '&quot;')}">Read More</button>` : ""}
+      <div class="d-flex justify-content-center gap-3 mt-3">
+        <button class="btn btn-edit edit-btn" 
+          data-id="${id}" 
+          data-title="${title.replace(/"/g, '&quot;')}" 
+          data-description="${description.replace(/"/g, '&quot;')}">
+          <i class="fas fa-edit me-1"></i> Edit
+        </button>
+        <button onclick="deletePost('${id}')" class="btn btn-delete">
+          <i class="fas fa-trash-alt me-1"></i> Delete
+        </button>
+      </div>
+    </div>`;
       })
       .join('');
+
+    document.querySelectorAll('.edit-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const title = btn.getAttribute('data-title');
+        const desc = btn.getAttribute('data-description');
+        updatePost(id, title, desc);
+      });
+    });
+
+
 
     // Add read-more event listener
     document.addEventListener('click', (e) => {
@@ -945,7 +965,7 @@ async function deletePost(postId) {
     },
     buttonsStyling: false,
   });
-  
+
   swalWithBootstrapButtons.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
