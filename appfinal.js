@@ -681,9 +681,9 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
     const { error } = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-         redirectTo: 'https://rabiamuhammadsaleem.github.io/signup/post.html',
+        //  redirectTo: 'https://rabiamuhammadsaleem.github.io/signup/post.html',
         // redirectTo:redirectTo,
-        //  redirectTo: window.location.origin + '/post.html',
+         redirectTo: window.location.origin + 'https://rabiamuhammadsaleem.github.io/signup/post.html',
         queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
