@@ -679,14 +679,22 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
 
     showLoader();
     const { error } = await client.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        //  redirectTo: 'https://rabiamuhammadsaleem.github.io/signup/post.html',
-        // redirectTo:redirectTo,
-         redirectTo: window.location.origin + 'https://rabiamuhammadsaleem.github.io/signup/post.html',
-        queryParams: { access_type: 'offline', prompt: 'consent' },
-      },
-    });
+  provider: 'google',
+  options: {
+    redirectTo: 'https://rabiamuhammadsaleem.github.io/signup/post.html',
+    queryParams: { access_type: 'offline', prompt: 'consent' },
+  },
+});
+
+    // const { error } = await client.auth.signInWithOAuth({
+    //   provider: 'google',
+    //   options: {
+    //     //  redirectTo: 'rabiamuhammadsaleem.github.io/signup/post.html',
+    //     // redirectTo:redirectTo,
+    //      redirectTo: window.location + 'https://rabiamuhammadsaleem.github.io/signup/post.html',
+    //     queryParams: { access_type: 'offline', prompt: 'consent' },
+    //   },
+    // });
     if (error) throw error;
   } catch (error) {
     console.error('Google login error:', error);
