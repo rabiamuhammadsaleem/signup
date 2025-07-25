@@ -673,11 +673,16 @@ loginBtn && loginBtn.addEventListener('click', async () => {
 const loginWithGoogle = document.getElementById('loginWithGoogle');
 loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
   try {
+    const redirectTo = window.location.hostname === '127.0.0.1'
+    ? window.Location.origin + '/post.html'
+    : window.Location.origin + '/signup/post.html'
+
     showLoader();
     const { error } = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/post.html',
+        redirectTo:redirectTo,
+        // redirectTo: window.location.origin + '/post.html',
         queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
