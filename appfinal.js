@@ -682,8 +682,8 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
       provider: 'google',
       options: {
         redirectTo:redirectTo,
-        // redirectTo: window.location.origin + '/post.html',
-        // queryParams: { access_type: 'offline', prompt: 'consent' },
+         redirectTo: window.location.origin + '/post.html',
+        queryParams: { access_type: 'offline', prompt: 'consent' },
       },
     });
     if (error) throw error;
