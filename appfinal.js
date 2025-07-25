@@ -675,7 +675,7 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
   try {
     const redirectTo = window.location.hostname === '127.0.0.1'
     ? window.Location.origin + '/post.html'
-    : window.Location.origin + '/signup'
+    : window.Location.origin + '/signup/post.html'
 
     showLoader();
     const { error } = await client.auth.signInWithOAuth({
