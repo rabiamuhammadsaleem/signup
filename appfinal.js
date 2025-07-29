@@ -701,7 +701,7 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
     const { error } = await client.auth.signInWithOAuth({
   provider: 'google',
   options: {
-    redirectTo: ,
+    redirectTo: redirectTo,
     queryParams: { access_type: 'offline', prompt: 'consent' },
   },
 });
