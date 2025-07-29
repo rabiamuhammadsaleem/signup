@@ -669,6 +669,26 @@ loginBtn && loginBtn.addEventListener('click', async () => {
   }
 });
 
+// // Google login
+// const loginWithGoogle = document.getElementById('loginWithGoogle');
+// loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
+//   try {
+//     showLoader();
+//     const { error } = await client.auth.signInWithOAuth({
+//       provider: 'google',
+//       options: {
+//         redirectTo: window.location.origin + '/post.html',
+//         queryParams: { access_type: 'offline', prompt: 'consent' },
+//       },
+//     });
+//     if (error) throw error;
+//   } catch (error) {
+//     console.error('Google login error:', error);
+//     alert(error.message || 'Google login failed');
+//     hideLoader();
+//   }
+// });
+
 // Google login
 const loginWithGoogle = document.getElementById('loginWithGoogle');
 loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
@@ -681,9 +701,21 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
     const { error } = await client.auth.signInWithOAuth({
   provider: 'google',
   options: {
-    redirectTo: redirectTo,
+    redirectTo: ,
     queryParams: { access_type: 'offline', prompt: 'consent' },
   },
+});
+   if (error) throw error;
+  } catch (error) {
+    console.error('Google login error:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Google Login Failed',
+      text: error.message || 'Failed to login with Google',
+      confirmButtonColor: '#d33'
+    });
+    hideLoader();
+  }
 });
 
 //     showLoader();
@@ -704,18 +736,7 @@ loginWithGoogle && loginWithGoogle.addEventListener('click', async () => {
     //     queryParams: { access_type: 'offline', prompt: 'consent' },
     //   },
     // });
-    if (error) throw error;
-  } catch (error) {
-    console.error('Google login error:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Google Login Failed',
-      text: error.message || 'Failed to login with Google',
-      confirmButtonColor: '#d33'
-    });
-    hideLoader();
-  }
-});
+//  
 
 // Github login
 const loginWithGithub = document.getElementById('loginWithGithub');
